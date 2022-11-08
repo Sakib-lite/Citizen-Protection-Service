@@ -1,0 +1,96 @@
+type Query {
+  users: [User!]!
+  Complaints: [Complaint!]!
+}
+
+type Mutation {
+  signup(credentials: Credentials!, name: String!): AuthPayload!
+  signin(credentials: Credentials!): AuthPayload!
+  policeStationCreate(
+    input: StationInput!
+    location: LocationInput
+  ): PoliceStationPayload!
+  complaintCreate(
+    input: ComplaintInput!
+    location: LocationInput!
+  ): ComplaintPayload!
+}
+
+type User {
+  id: ID!
+  name: String!
+  number: Float!
+  role: String!
+  password: String!
+}
+
+type Complaint {
+  id: ID!
+  title: String!
+  description: String!
+  public: Boolean!
+  location: Location!
+  photos: String!
+  status: String!
+}
+
+type PoliceStation {
+  id: ID!
+  name: String!
+  number: Int!
+  location: Location!
+  description: String!
+  address: String!
+  complaints: [Complaint]
+  street: String
+  postalCode: Int!
+
+}
+
+type Location {
+  type: String!
+  coordinates: [Float]!
+}
+type UserError {
+  message: String
+}
+
+type AuthPayload {
+  userErrors: [UserError!]!
+  token: String
+}
+type PoliceStationPayload {
+  userErrors: [UserError!]!
+  policeStation: PoliceStation
+}
+
+type ComplaintPayload {
+  userErrors: [UserError!]!
+  complaint: Complaint
+}
+
+input Credentials {
+  number: Int!
+  password: String!
+}
+
+input StationInput {
+  name: String!
+  address: String!
+  description: String!
+  number: Int!
+  street: String
+  postalCode: Int!
+}
+
+input LocationInput {
+  type: String!
+  coordinates: [Float!]!
+}
+
+input ComplaintInput {
+  title: String!
+  description: String!
+  public: Boolean!
+  photos: String!
+}
