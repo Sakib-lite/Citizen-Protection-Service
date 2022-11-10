@@ -1,0 +1,3 @@
+{
+  "extends": ["next/babel","eslint:recommended","next","next/core-web-vitals"]
+}
