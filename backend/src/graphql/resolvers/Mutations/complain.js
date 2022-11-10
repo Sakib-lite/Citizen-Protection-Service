@@ -2,7 +2,8 @@ const Complaint = require('../../../models/complaintModel');
 const PoliceStation = require('../../../models/policeStationModel');
 
 const User = require('../../../models/userModel');
-const distance = 1;
+const { checkSlang } = require('../../../utils/filterSlang');
+const distance = 10;
 const unitValue = 1000;
 const Error = (msg) => {
   return {
@@ -28,6 +29,8 @@ exports.complaintResolvers = {
     if (!title || !description || !public || !photos)
       return Error('Please fill up all the fields');
 
+    if (checkSlang(title) || checkSlang(description))
+      return Error('Please remove Abusive words');
     const complaint = await Complaint.create({
       title,
       description,
@@ -37,7 +40,11 @@ exports.complaintResolvers = {
       location,
     });
 
+
     if (!complaint) return Error('Complain cannot be created');
+    author.complaints.push(complaint);
+    author.save();
+
 
     const closest = await PoliceStation.aggregate([
       {
@@ -62,10 +69,13 @@ exports.complaintResolvers = {
           distance: 1,
         },
       },
-      { $limit: 1 },
+      { $limit: 3 },
     ]);
 
     if (!closest) return Error('No closest police station found');
+    complaint.policeStation = closest[0]._id;
+    complaint.save();
+
 
     const policeStation = await PoliceStation.findById(closest[0]._id);
     policeStation.complaints.push(complaint);

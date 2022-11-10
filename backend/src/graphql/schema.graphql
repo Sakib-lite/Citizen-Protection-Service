@@ -1,6 +1,10 @@
 type Query {
   users: [User!]!
-  Complaints: [Complaint!]!
+  user: User
+  complaints: [Complaint!]!
+  complaint(id: ID!):Complaint
+  policeStations: [PoliceStation!]!
+  policeStation(id:ID!):PoliceStation
 }
 
 type Mutation {
@@ -20,8 +24,8 @@ type User {
   id: ID!
   name: String!
   number: Float!
-  role: String!
-  password: String!
+  role: String
+  complaints: [Complaint!]!
 }
 
 type Complaint {
@@ -30,8 +34,9 @@ type Complaint {
   description: String!
   public: Boolean!
   location: Location!
-  photos: String!
+  photos: String
   status: String!
+  policeStation: PoliceStation
 }
 
 type PoliceStation {
@@ -41,10 +46,9 @@ type PoliceStation {
   location: Location!
   description: String!
   address: String!
-  complaints: [Complaint]
+  complaints: [Complaint!]!
   street: String
   postalCode: Int!
-
 }
 
 type Location {
@@ -58,6 +62,7 @@ type UserError {
 type AuthPayload {
   userErrors: [UserError!]!
   token: String
+  user: User
 }
 type PoliceStationPayload {
   userErrors: [UserError!]!
@@ -92,5 +97,5 @@ input ComplaintInput {
   title: String!
   description: String!
   public: Boolean!
-  photos: String!
+  photos: String
 }

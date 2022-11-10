@@ -9,9 +9,18 @@ const Complaint = require('./models/complaintModel');
 const { getUserFromToken } = require('./utils/getUserFromToken');
 const connectToDatabase = require('./utils/db');
 require('dotenv').config();
-
+const cors= require('cors')
 const app = express();
+
+
 app.use(express.json());
+app.use(
+  cors({
+    origin: '*',
+    credentials: true,
+  })
+);
+
 
 async function initiateGraphQl() {
   const typeDefs = readFileSync(

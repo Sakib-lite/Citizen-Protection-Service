@@ -2,12 +2,10 @@ const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
   name: {
-    type: String,
-    required: true,
+    type: String
   },
   number: {
-    type: Number,
-    required: true,
+    type: Number
   },
   location: {
     lat: Number,

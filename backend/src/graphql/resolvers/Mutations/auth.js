@@ -9,6 +9,7 @@ const Error = (msg) => {
       },
     ],
     token: null,
+    user:null
   };
 };
 
@@ -32,10 +33,10 @@ exports.authResolvers = {
         number,
         password: hashedPassword,
       }); //user created
-
       return {
         userErrors: [],
         token: sendToken(user.id), //sending jwt token
+        user
       };
     } catch (err) {
       console.log(err);
@@ -50,7 +51,7 @@ exports.authResolvers = {
 
       if (!user) return Error('Invalid number or password'); //sending error
 
-      let isMatch = bcrypt.compare(password, user.password); //matching password
+      let isMatch =await bcrypt.compare(password, user.password); //matching password
 
       if (!isMatch) {
         return {
@@ -62,6 +63,7 @@ exports.authResolvers = {
       return {
         userErrors: [],
         token: sendToken(user.id),
+        user:user
       };
     } catch (err) {
       console.log(err);
