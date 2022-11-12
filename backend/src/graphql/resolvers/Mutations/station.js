@@ -16,7 +16,6 @@ exports.policeStationResolvers = {
       const { PoliceStation } = models;
 
       const { name, address, description, number, street, postalCode } = input;
-      console.log(name, address, description, number, street, postalCode,location);
 
       if (
         !name ||

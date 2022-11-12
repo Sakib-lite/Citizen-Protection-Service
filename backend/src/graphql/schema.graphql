@@ -2,9 +2,9 @@ type Query {
   users: [User!]!
   user: User
   complaints: [Complaint!]!
-  complaint(id: ID!):Complaint
+  complaint(id: ID!): Complaint
   policeStations: [PoliceStation!]!
-  policeStation(id:ID!):PoliceStation
+  policeStation(id: ID!): PoliceStation
 }
 
 type Mutation {
@@ -18,6 +18,8 @@ type Mutation {
     input: ComplaintInput!
     location: LocationInput!
   ): ComplaintPayload!
+
+  complaintUpdate(id: ID!, status: String!): ComplaintPayload!
 }
 
 type User {
@@ -94,8 +96,8 @@ input LocationInput {
 }
 
 input ComplaintInput {
-  title: String!
-  description: String!
-  public: Boolean!
+  title: String
+  description: String
+  public: Boolean
   photos: String
 }
