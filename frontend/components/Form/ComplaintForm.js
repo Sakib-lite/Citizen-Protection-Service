@@ -14,6 +14,8 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { unsetShowModal } from '../store/ui-slice';
 import { gql, useMutation } from '@apollo/client';
 import Snackbar from './../../utils/notistick/Snackbar';
+import { useComplaint } from '../../utils/hooks';
+import { setComplaint } from '../store/complaintSlice';
 
 const COMPLAINT = gql`
   mutation ($input: ComplaintInput!, $location: LocationInput!) {
@@ -38,7 +40,8 @@ export default function ComplaintForm() {
   const coordinates = useSelector((state) => state.location.coordinates);
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-
+  const {complaints}=useComplaint()
+  
   const handleSubmit = (event) => {
     event.preventDefault();
     if (!user){
@@ -76,6 +79,7 @@ return
       } else {
         Snackbar.success('Complaint Created');
         dispatch(unsetShowModal());
+        dispatch(setComplaint(complaints))
       }
     }
   }, [data]);

@@ -52,6 +52,7 @@ export default function Header() {
             <div className='mx-auto text-gray-800 space-x-5'>
              <Link href='/login' passHref><a>Login</a></Link>
              <Link href='/signup' passHref><a>Signup</a></Link>
+             <Link href='/police-stations'><a>Police Stations </a></Link>
             </div>
 
             {/* remaining components will be hidden in dropdown. */}
