@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   showModal: false,
+  loading: false,
 };
 
 const uiSlice = createSlice({
@@ -14,8 +15,14 @@ const uiSlice = createSlice({
     unsetShowModal(state) {
       state.showModal = false;
     },
+    setLoading(state) {
+      state.loading = true;
+    },
+    unsetLoading(state) {
+      state.loading = false;
+    },
   },
 });
 
-export const {setShowModal, unsetShowModal} = uiSlice.actions;
+export const {setShowModal, unsetShowModal,setLoading, unsetLoading} = uiSlice.actions;
 export default uiSlice.reducer;

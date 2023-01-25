@@ -6,7 +6,7 @@ const policeStationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    number: { type: Number, required: true },
+    number: { type: Number },
     location: {
       type: {
         type: String,
@@ -24,9 +24,13 @@ const policeStationSchema = new mongoose.Schema(
     },
 
     complaints: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Complaint' }],
-    address: String
+    address: String,
+    image: String,
+
+    beneficiaries: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    admins: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   },
-  { timestamps: true}
+  { timestamps: true }
 );
 policeStationSchema.index({ location: '2dsphere' });
 const PoliceStation = mongoose.model('PoliceStation', policeStationSchema);

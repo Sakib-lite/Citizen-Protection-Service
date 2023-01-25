@@ -6,21 +6,28 @@ const { resolvers } = require('./graphql/resolvers/index');
 const User = require('./models/userModel');
 const PoliceStation = require('./models/policeStationModel');
 const Complaint = require('./models/complaintModel');
+const Comment = require('./models/commentModel');
+const Word = require('./models/wordModel');
 const { getUserFromToken } = require('./utils/getUserFromToken');
 const connectToDatabase = require('./utils/db');
 require('dotenv').config();
-const cors= require('cors')
+const cors = require('cors');
 const app = express();
 
-
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(
   cors({
     origin: '*',
     credentials: true,
   })
 );
-
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  })
+);
 
 async function initiateGraphQl() {
   const typeDefs = readFileSync(
@@ -32,7 +39,7 @@ async function initiateGraphQl() {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     const userInfo = await getUserFromToken(token);
     return {
-      models: { User, PoliceStation, Complaint },
+      models: { User, PoliceStation, Complaint, Comment, Word },
       userInfo,
     };
   };

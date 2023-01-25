@@ -1,8 +1,18 @@
-const { checkSlang } = require('../../../utils/filterSlang');
-const distance = 50;
+require('dotenv').config();
+const { checkWord } = require('../../../utils/filterSlang');
 const unitValue = 1000;
+const cloudinary = require('cloudinary').v2;
+const natural = require('natural');
+const distance = 50;
+const policeHeadquaterId = '63cfc6f16ce1fd0f73568692';
 
-const Error = (msg) => {
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const Error = (msg = 'Something went wrong') => {
   return {
     userErrors: [
       {
@@ -14,27 +24,73 @@ const Error = (msg) => {
 };
 
 exports.complaintResolvers = {
-  complaintCreate: async (_, { input, location }, { models, userInfo }) => {
+  complaintCreate: async (
+    _,
+    { input, location, images = [] },
+    { models, userInfo }
+  ) => {
     try {
-      const { User, Complaint, PoliceStation } = models;
+      const { User, Complaint, PoliceStation, Word } = models;
 
       const author = await User.findById(userInfo.id);
-
       if (!author) return Error('You are not logged in');
 
-      const { title, description, public, photos } = input;
+      const { title, description, public } = input;
 
-      if (!title || !description || !public || !photos)
+      if (!title || !description || !public)
         return Error('Please fill up all the fields');
+      const img = [];
 
-      if (checkSlang(title) || checkSlang(description))
-        return Error('Please remove Abusive words');
+      const slangWords = await Word.find({}).slangWords;
+      const rumourWordsSet = await Word.find({}).rumourWordsSet;
+      const tokenizer = new natural.WordTokenizer();
+      const tokenizedTitle = tokenizer.tokenize(title);
+      const tokenizedDescription = tokenizer.tokenize(description);
+
+      //NEED TO BE FIXED⛔⛔⛔
+
+    if(slangWords){
+      tokenizedTitle.forEach((word) => {
+        if (checkWord(slangWords, word)) {
+          return Error(`"${word}" is slang in title`);
+        }
+      });
+
+      tokenizedDescription.forEach((word) => {
+        if (checkWord(slangWords, word)) {
+          return Error(`"${word}" is slang in description`);
+        }
+      });
+    }  
+
+   if(rumourWordsSet){
+
+     tokenizedTitle.forEach((word) => {
+       if (checkWord(rumourWordsSet, word)) {
+         public = false;
+        }
+      });
+      
+      tokenizedDescription.forEach((word) => {
+        if (checkWord(rumourWordsSet, word)) {
+          public = false;
+        }
+      });
+    }
+      
+      for (let image of images) {
+        const uploadResponse = await cloudinary.uploader.upload(image, {
+          upload_preset: 'd3z47zme',
+        });
+        img.push(uploadResponse.secure_url);
+      }
+
       const complaint = await Complaint.create({
         title,
         description,
         public,
         author: author.id,
-        photos,
+        images: img,
         location,
       });
 
@@ -68,21 +124,26 @@ exports.complaintResolvers = {
         { $limit: 3 },
       ]);
 
-      if (!closest) return Error('No closest police station found');
-      console.log('closest', closest);
-      complaint.policeStation = closest[0]._id;
-      complaint.save();
+      if (closest) {
+        console.log('closest', closest);
+        complaint.policeStation = closest[0]._id;
+        complaint.save();
+        const policeStation = await PoliceStation.findById(closest[0]._id);
+        policeStation.complaints.push(complaint);
+        policeStation.save();
 
-      const policeStation = await PoliceStation.findById(closest[0]._id);
-      policeStation.complaints.push(complaint);
-      policeStation.save();
+      } else {
+        const policeStation = await PoliceStation.findById(policeHeadquaterId);
+        policeStation.complaints.push(complaint);
+        policeStation.save();
+      }
 
       return {
         userErrors: [],
         complaint,
       };
     } catch (e) {
-      console.log(e);
+      return Error(e.message);
     }
   },
 
@@ -110,7 +171,7 @@ exports.complaintResolvers = {
         complaint,
       };
     } catch (e) {
-      console.log(e);
+      return Error(e.message);
     }
   },
 };

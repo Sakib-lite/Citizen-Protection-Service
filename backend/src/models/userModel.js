@@ -1,21 +1,31 @@
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+    },
+    number: {
+      type: Number,
+    },
+    dob: Date,
+    password: { type: String, select: false },
+    address: String,
+    complaints: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Complaint' }],
+    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
+    image: String,
+    role: {
+      type: String,
+      enum: ['user', 'admin', 'moderator'],
+      default: 'user',
+    },
+    banned: {
+      type: Boolean,
+      default: false,
+    },
   },
-  number: {
-    type: Number
-  },
-  location: {
-    lat: Number,
-    lng: Number,
-  },
-  dob: Date,
-  password: { type: String, select: false },
-  address: String,
-  complaints: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Complaint' }],
-});
+  { timestamps: true }
+);
 
 const User = mongoose.model('User', userSchema);
 

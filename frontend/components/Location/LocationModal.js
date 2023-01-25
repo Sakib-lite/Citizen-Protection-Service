@@ -6,6 +6,7 @@ import { unsetShowModal } from '../store/ui-slice';
 import Image from 'next/image';
 import Rating from '@mui/material/Rating';
 import ComplaintForm from '../Form/ComplaintForm';
+import Loading from '../layout/Loading';
 
 const style = {
   position: 'absolute',
@@ -17,7 +18,8 @@ const style = {
 };
 
 export default function LocationModal() {
-  const open = useSelector((state) => state.ui.showModal);
+  const open = Boolean(useSelector((state) => state.ui.showModal))
+  const loading = useSelector((state) => state.ui.loading);
   const dispatch = useDispatch();
 
 
@@ -27,12 +29,20 @@ export default function LocationModal() {
     <div>
       <Modal
         open={open}
-        onClose={!open}
+        onClose={handleClose}
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
         className='bg-transparent'
+      sx={{   
+         overflow:'scroll',
+         height:'100%',
+         display:'block'
+      }}
       >
-        <Box sx={style} className='relative w-8/12 rounded-lg bg-transparent'>
+        <Box sx={style} className='relative w-8/12 h-full rounded-lg bg-transparent'>
+ {loading && 
+    <Loading/>
+ }
     <ComplaintForm/>
         </Box>
       </Modal>

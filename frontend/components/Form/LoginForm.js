@@ -12,7 +12,9 @@ import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import { gql, useMutation } from '@apollo/client';
 import Snackbar from './../../utils/notistick/Snackbar';
-import { setUserDetails } from '../store/authSlice';
+import { login } from '../store/authSlice';
+import { setLoading, unsetLoading } from '../store/ui-slice';
+import Cookies from 'js-cookie';
 
 const SIGNIN = gql`
   mutation ($credentials: Credentials!) {
@@ -22,10 +24,11 @@ const SIGNIN = gql`
       }
       token
       user {
-      id
-      name
-      number
-    }
+        id
+        name
+        number
+        image
+      }
     }
   }
 `;
@@ -33,27 +36,37 @@ const SIGNIN = gql`
 export default function LoginPage() {
   const dispatch = useDispatch();
   const [signin, { data, error, loading }] = useMutation(SIGNIN);
+
   const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    signin({
-      variables: {
-        credentials: {
-          number: Number(data.get('number')),
-          password: data.get('password'),
+    try {
+      event.preventDefault();
+      dispatch(setLoading());
+      const data = new FormData(event.currentTarget);
+      signin({
+        variables: {
+          credentials: {
+            number: Number(data.get('number')),
+            password: data.get('password'),
+          },
         },
-      },
-    });
+      });
+    } catch (e) {
+      console.err(e,'error')
+      dispatch(unsetLoading());
+    }
   };
 
   React.useEffect(() => {
     if (data) {
       if (data.signin.userErrors.length) {
+        dispatch(unsetLoading());
         Snackbar.error(data.signin.userErrors[0].message);
       }
       if (data.signin.token) {
-        localStorage.setItem('token', data.signin.token);
-        dispatch(setUserDetails(data.signin.user))
+        window.localStorage.setItem('token', data.signin.token);
+        dispatch(unsetLoading());
+        dispatch(login(data.signin.user));
+        Cookies.set('user', JSON.stringify(data.signin.user));
         Snackbar.success('Logged In');
       }
     }
@@ -100,8 +113,8 @@ export default function LoginPage() {
             label='Password'
             type='password'
             id='password'
-            autoComplete='current-password'
-            defaultValue='123456'
+            autoComplete='password'
+            defaultValue='12345'
           />
 
           <Button

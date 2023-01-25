@@ -6,6 +6,7 @@ import PoliceStation from '../../components/Police/PoliceStation';
 import { gql, useQuery } from '@apollo/client';
 import Button from '@mui/material/Button';
 import { useRouter } from 'next/router';
+import Grid from '@mui/material/Grid';
 
 const POLICESTATION = gql`
   query {
@@ -13,6 +14,8 @@ const POLICESTATION = gql`
       id
       name
       description
+      image
+      postalCode
     }
   }
 `;
@@ -24,22 +27,21 @@ const PoliceStations = () => {
     if (data) setPoliceStations(data.policeStations);
   }, [data]);
 
-
   return (
     <Fragment>
       <Layout>
-        <div className='flex grid grid-cols-3 gap-4'>
-          {policeStations.map((police) => (
-            <Button onClick={()=>router.push(`/police-stations/${police.id}`)}>
-              <PoliceStation
-                id={police.id}
-                key={police.id}
-                name={police.name}
-                description={police.description}
-              />
-            </Button>
-          ))}{' '}
-        </div>
+        <Grid
+          container
+          columns={{ xs: 4, sm: 8, md: 8 }}
+          className='mb-10 mx-2 gap-5'
+        >
+          {policeStations.length > 0 &&
+            policeStations.map((station) => (
+              <Grid item xs={2} sm={4} md={2} key={station.id}>
+                <PoliceStation station={station} />
+              </Grid>
+            ))}
+        </Grid>
       </Layout>
     </Fragment>
   );

@@ -5,7 +5,7 @@ const complaintSchema = new mongoose.Schema(
     title: String,
     description: String,
     public: { type: Boolean, default: true },
-    photos: { type: String },
+    images: [{ type: String }],
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     status: {
       type: String,
@@ -25,9 +25,16 @@ const complaintSchema = new mongoose.Schema(
         type: [Number],
       },
     },
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Comment',
+      },
+    ],
   },
   { timestamps: true }
 );
+
 complaintSchema.index({ location: '2dsphere' });
 const Complaint = mongoose.model('Complaint', complaintSchema);
 

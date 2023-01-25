@@ -4,25 +4,47 @@ import PoliceStation from '../../components/Police/PoliceStation';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../../components/layout/Layout';
+import Loading from '../../components/layout/Loading';
+import { setLoading, unsetLoading } from '../../components/store/ui-slice';
+import { useDispatch, useSelector } from 'react-redux';
+import AllCards from '../../components/Card/AllCards';
+import PoliceStationProfile from '../../components/Police/Profile/PoliceStationProfile';
+
 
 const POLICESTATION = gql`
   query ($policeStationId: ID!) {
     policeStation(id: $policeStationId) {
       id
+      name
+      image
+      description
+      street
+      postalCode
+      address
+      number
       complaints {
         id
         title
         description
         status
+        images
       }
     }
   }
 `;
 
-const Complaint = () => {
+const PoliceStationPage = () => {
+  const dispatch = useDispatch();
   const [complaints, setComplaints] = useState([]);
+  const [policeStation, setPoliceStation] = useState();
   const router = useRouter();
   const { slug } = router.query;
+
+
+
+const complaintss=useSelector(state=>state.complaint.complaints).filter((comp)=>comp.policeStation.id===slug)
+
+
   const { data, loading, error } = useQuery(POLICESTATION, {
     variables: {
       policeStationId: slug,
@@ -30,44 +52,30 @@ const Complaint = () => {
   });
 
   useEffect(() => {
-    if (data) setComplaints(data.policeStation.complaints);
-  }, [data]);
+    if (data) {
+      setComplaints(data.policeStation.complaints);
+      setPoliceStation(data.policeStation);
+    }
+  }, [data, policeStation]);
 
-  if (loading) return <h1>loading....</h1>;
-  if (complaints.length === 0)
-    return (
-    
-    <Layout>
+  if (loading) {
+    dispatch(setLoading());
+  } else dispatch(unsetLoading());
+ 
+ 
+ if (!policeStation) return <Loading/>
 
-    <div class='bg-white'>
-        <div class='space-y-16 container xl:max-w-7xl mx-auto px-4 py-16 lg:px-8 lg:py-32'>
-          <div class='text-center'>
-            <div class='text-sm uppercase font-bold tracking-wider mb-1 text-blue-700'>
-             No complaints yet
-            </div>{' '}
-          </div>{' '}
-        </div>{' '}
-      </div>
-    </Layout>
-    );
+
+
 
   return (
     <Fragment>
       <Layout>
-        <div className='flex grid grid-cols-3 gap-4'>
-          {complaints.map((complaint) => (
-            <PoliceStation
-              id={complaint.id}
-              key={complaint.id}
-              name={complaint.title}
-              description={complaint.description}
-              status={complaint.status}
-            />
-          ))}
-        </div>
+        <PoliceStationProfile policeStation={policeStation} />
+        <AllCards complaints={complaintss} />
       </Layout>
     </Fragment>
   );
 };
 
-export default Complaint;
+export default PoliceStationPage;

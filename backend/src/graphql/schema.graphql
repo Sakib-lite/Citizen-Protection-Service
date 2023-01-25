@@ -1,33 +1,49 @@
+scalar Upload
+scalar Date
+
 type Query {
   users: [User!]!
   user: User
   complaints: [Complaint!]!
   complaint(id: ID!): Complaint
+  comments: [Comment]
+  comment(id: ID!): Comment
   policeStations: [PoliceStation!]!
   policeStation(id: ID!): PoliceStation
 }
 
 type Mutation {
-  signup(credentials: Credentials!, name: String!): AuthPayload!
+  signup(
+    credentials: Credentials!
+    name: String!
+    image: [Upload]
+  ): AuthPayload!
   signin(credentials: Credentials!): AuthPayload!
   policeStationCreate(
     input: StationInput!
     location: LocationInput
+    image: [Upload]
   ): PoliceStationPayload!
   complaintCreate(
     input: ComplaintInput!
     location: LocationInput!
+    images: [Upload]
   ): ComplaintPayload!
-
   complaintUpdate(id: ID!, status: String!): ComplaintPayload!
+  commentCreate(input: CommentInput!): CommentPayload!
+  commentUpdate(id: ID!, input: CommentUpdate): CommentPayload!
+  userUpdate(id: ID!, input: UserInput!): AuthPayload!
 }
 
 type User {
   id: ID!
   name: String!
   number: Float!
-  role: String
+  role: String!
   complaints: [Complaint!]!
+  comments: [Comment!]!
+  image: String
+  createdAt: Date!
 }
 
 type Complaint {
@@ -36,9 +52,12 @@ type Complaint {
   description: String!
   public: Boolean!
   location: Location!
-  photos: String
+  images: [String]!
+  author: User!
   status: String!
+  comments: [Comment]!
   policeStation: PoliceStation
+  createdAt: Date!
 }
 
 type PoliceStation {
@@ -51,12 +70,25 @@ type PoliceStation {
   complaints: [Complaint!]!
   street: String
   postalCode: Int!
+  image: String!
+  createdAt: Date!
 }
 
 type Location {
   type: String!
   coordinates: [Float]!
 }
+
+type Comment {
+  id: ID!
+  comment: String!
+  complaint: Complaint!
+  author: User!
+  reported: Boolean!
+  visible: Boolean!
+  createdAt: Date!
+}
+
 type UserError {
   message: String
 }
@@ -76,9 +108,19 @@ type ComplaintPayload {
   complaint: Complaint
 }
 
+type CommentPayload {
+  userErrors: [UserError!]!
+  comment: Comment
+}
+
 input Credentials {
   number: Int!
   password: String!
+}
+
+input UserInput {
+  role: String
+  banned: Boolean
 }
 
 input StationInput {
@@ -99,5 +141,14 @@ input ComplaintInput {
   title: String
   description: String
   public: Boolean
-  photos: String
+}
+
+input CommentInput {
+  comment: String!
+  complaintId: ID!
+}
+
+input CommentUpdate {
+  visible: Boolean
+  reported: Boolean
 }

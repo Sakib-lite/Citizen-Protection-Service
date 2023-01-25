@@ -1,24 +1,41 @@
 import AppBar from '@mui/material/AppBar';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 import Image from 'next/image';
-import img from '../../public/logo-1.png';
+import img from '../../public/logo3.png';
 import IconButton from '@mui/material/IconButton';
+import LoginIcon from '@mui/icons-material/Login';
+import NavOptions from './NavOptions';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ViewHeadlineOutlinedIcon from '@mui/icons-material/ViewHeadlineOutlined';
+import DropDownList from './DropDownList';
+import DarkModeSwitch from './DarkModeSwitch';
 import Link from 'next/link';
 import { useStyles } from '../../utils/styles';
-import DropDown from './DropDown';
-import Search from './Search/Search';
-import Icons from './Icons';
+import SearchBar from './SearchBar';
+import CartIcon from './CartIcon';
+import Cookies from 'js-cookie';
+import { useTheme } from 'next-themes';
+import { useSelector } from 'react-redux';
+import UserAvatar from './UserAvatar';
 
 export default function Header() {
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:768px)');
   const [openDrawer, setOpenDrawer] = useState(false);
+  //darkmode
+  const { theme } = useTheme();
+  useEffect(() => {
+    Cookies.set('theme', JSON.stringify(theme));
+  }, [theme]);
 
-  //for tab and mobile
+  //redux state management
+
+  const auth = useSelector((state) => state.auth);
+  const { isLoggedIn } = auth;
+
   const drawer = (
     <Fragment>
       <SwipeableDrawer
@@ -30,55 +47,62 @@ export default function Header() {
         disableDiscovery
         classes={{ paper: classes.drawer }}
       >
-       {/* icons and upload button components in the dropdown component*/}
-        <DropDown />
+        <DropDownList />
       </SwipeableDrawer>
     </Fragment>
   );
 
   return (
     <Fragment>
-      <AppBar position='sticky' className='bg-white md:px-2 py-1  mb-4'>
+      <AppBar
+        position='sticky'
+        className='bg-gray-200 dark:bg-gray-500 md:px-2 px-1  '
+      >
         <Toolbar>
           <Link href='/'>
-            <a className=' items-center '>
-              <div className='md:w-24 ml-2 md:ml-6 lg:ml-10 w-10 mr-4'>
-             {/* logo */}
-             <Link href='/' passHref><a className='text-gray-800'>Home</a></Link>
+            <a className='flex items-center '>
+              <div className=''>
+                <Image width='100px' height='100px' alt='logo' src={img} priority={true}/>
               </div>
+            
             </a>
           </Link>
-          <div className='flex w-full'>
-            <div className='mx-auto text-gray-800 space-x-5'>
-             <Link href='/login' passHref><a>Login</a></Link>
-             <Link href='/signup' passHref><a>Signup</a></Link>
-             <Link href='/police-stations'><a>Police Stations </a></Link>
-            </div>
+       <div className="flex  ml-auto">  <div className="md:mr-20 sm:mr-16"> <SearchBar /></div>
 
-            {/* remaining components will be hidden in dropdown. */}
-            {!matches && (
-              <div className='flex items-center'>
-                <div className='flex ml-auto'>
-                  {/* icons and upload button component */}
-                  <Icons />
-                </div>
-              </div>
-            )}
-            {/* logic for responsive ui for maobile and tab. under 768px drawer will be visible */}
-            {matches ? (
-              <Fragment>
-                <IconButton
-                  className='text-gray-800 ml-auto'
-                  onClick={() => setOpenDrawer(!openDrawer)}
-                >
-                  {/* dropdown button */}
-                  <ViewHeadlineOutlinedIcon />
-                </IconButton>
-              </Fragment>
-            ) : null}
-            {drawer}
-          </div>
-        </Toolbar>
+          {!matches && (
+            <div className='flex items-center'>
+              <NavOptions />
+              {/* cart icon section */}
+            
+              {!isLoggedIn && (
+                <Link href='/login' passHref>
+                  <IconButton size='large' >
+                    <LoginIcon className='text-gray-500 dark:text-gray-100'/>
+                  </IconButton>
+                </Link>
+              )}
+
+              <DarkModeSwitch />
+            </div>
+          )}
+
+
+          {isLoggedIn && !matches && <UserAvatar />}
+          {matches? (
+            <Fragment>
+            <div className="mx-auto flex">
+            <div className="hidden sm:block">  {isLoggedIn && <UserAvatar />}</div> 
+              </div>  
+              <IconButton
+                className='text-gray-600 dark:text-gray-200 ml-auto'
+                onClick={() => setOpenDrawer(!openDrawer)}
+              >
+                <ViewHeadlineOutlinedIcon />
+              </IconButton>
+            </Fragment>
+          ) : null}
+          {drawer}
+        </div></Toolbar>
       </AppBar>
     </Fragment>
   );

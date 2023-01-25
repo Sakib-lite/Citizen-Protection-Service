@@ -3,6 +3,7 @@ const { Mutation } = require('./Mutations/Mutation');
 const { PoliceStation } = require('./PoliceStation');
 const { Complaint } = require('./Complaint');
 const { User } = require('./User');
+const { Comment } = require('./Comment');
 
 exports.resolvers = {
   Query,
@@ -10,4 +11,5 @@ exports.resolvers = {
   PoliceStation,
   Complaint,
   User,
+  Comment
 };

@@ -6,28 +6,22 @@ import Map from '../components/Map/Map';
 import Container from '@mui/material/Container';
 import { gql, useQuery } from '@apollo/client';
 import { useDispatch, useSelector } from 'react-redux';
-import { setComplaint } from '../components/store/complaintSlice';
 import { useRouter } from 'next/router';
-import { unsetShowModal } from '../components/store/ui-slice';
-const COMPLAINT = gql`
-  query {
-    complaints {
-      id
-      title
-      location {
-        coordinates
-      }
-    }
-  }
-`;
+import { setLoading, unsetLoading, unsetShowModal } from '../components/store/ui-slice';
+import { useComplaint } from '../utils/hooks';
+import { setComplaint } from '../components/store/complaintSlice';
+
 
 export default function Home() {
   const [coords, setCoords] = useState({}); // user's current location
-  const { data } = useQuery(COMPLAINT);
-  const router = useRouter();
-  const { user } = useSelector((state) => state.auth);
 
+  const { complaints, loading:complaintLoading } = useComplaint();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (complaints) dispatch(setComplaint(complaints));
+  }, [complaints]);
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       ({ coords: { latitude, longitude } }) => {
@@ -35,12 +29,12 @@ export default function Home() {
       }
     );
     dispatch(unsetShowModal());
-    if (!user) router.push('/login');
   }, []);
 
-  useEffect(() => {
-    if (data) dispatch(setComplaint(data.complaints));
-  }, [data]);
+  useEffect(()=>{
+    if(complaintLoading)dispatch(setLoading())
+    else dispatch(unsetLoading())
+    },[complaintLoading])
 
   return (
     <Fragment>

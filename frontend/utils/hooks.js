@@ -1,47 +1,53 @@
-import { gql, useQuery } from '@apollo/client';
+import {  useQuery} from '@apollo/client';
+import { COMPLAINT, COMPLAINT_BY_ID, GET_USER, POLICESTATION } from './schema';
 
-const COMPLAINT = gql`
-  query {
-    complaints {
-      id
-      title
-      location {
-        coordinates
-      }
-    }
-  }
-`;
+
 
 export const useComplaint = () => {
-  const { data ,loading,error} = useQuery(COMPLAINT);
-return {
-    complaints:data.complaints
-,error,loading
-}
+  const { data, loading, error } = useQuery(COMPLAINT);
+  return {
+    complaints: data?.complaints,
+    error,
+    loading,
+  };
 };
 
 
-const POLICESTATION=gql`
-query {
-  policeStations {
-    id
-    name
-    description
-  }
-}
 
-`
-export const usePoliceStation=()=>{
+export const useComplaintById = (id) => {
 
- const{data,loading,error} =useQuery(POLICESTATION)
- console.log('data', data)
+  const { data, loading, error } = useQuery(COMPLAINT_BY_ID, {
+    variables: {
+      complaintId: id,
+    },
+  });
 
- return {
-  policeStations:[],
-  error,
-  loading
- }
-}
+  return {
+    complaint: data?.complaint,
+    loading,
+    error,
+  };
+};
 
 
 
+
+
+export const usePoliceStation = () => {
+  const { data, loading, error } = useQuery(POLICESTATION);
+  return {
+    policeStations: data?.policeStations,
+    error,
+    loading,
+  };
+};
+
+
+export const useGetUser = () => {
+  const { data, loading, error } = useQuery(GET_USER);
+  return {
+    user: data?.user,
+    error,
+    loading,
+  };
+};

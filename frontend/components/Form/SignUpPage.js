@@ -8,16 +8,19 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import DevicesOtherIcon from '@mui/icons-material/DevicesOther';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
 import { gql, useMutation } from '@apollo/client';
 import Snackbar from './../../utils/notistick/Snackbar';
 import { useRouter } from 'next/router';
+import DropImage from './DropImage';
+import { setLoading, unsetLoading } from '../store/ui-slice';
+import { deleteImages } from '../store/complaintSlice';
 
 
 const SIGNUP = gql`
-  mutation ($credentials: Credentials!, $name: String!) {
-    signup(credentials: $credentials, name: $name) {
+  mutation ($credentials: Credentials!, $name: String!,$image: [Upload]) {
+    signup(credentials: $credentials, name: $name,image:$image) {
       userErrors {
         message
       }
@@ -27,20 +30,26 @@ const SIGNUP = gql`
 `;
 
 export default function SignUpPage() {
+
   const [signup, { data, error, loading }] = useMutation(SIGNUP);
 const router= useRouter()
+  const image = useSelector((state) => state.complaint.images);
   const dispatch = useDispatch();
+
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+   dispatch(setLoading());
+    const formData = new FormData(event.currentTarget);
 
     signup({
       variables: {
         credentials: {
-          number: Number(data.get('number')),
-          password: data.get('password'),
+          number: Number(formData.get('number')),
+          password: formData.get('password'),
         },
-        name: data.get('name'),
+        name: formData.get('name'),
+        image: image,
       },
     });
 
@@ -51,8 +60,13 @@ const router= useRouter()
   useEffect(() => {
     if (data) {
       if (data.signup.userErrors.length) {
+           dispatch(unsetLoading());
         Snackbar.error(data.signup.userErrors[0].message)
-      }else {Snackbar.success('User created')
+      }else {
+           dispatch(unsetLoading());
+           dispatch(deleteImages());
+           Snackbar.success('User created')
+
  router.push('/login')
          }   }
   }, [data]);
@@ -101,10 +115,11 @@ const router= useRouter()
               required
               fullWidth
               id='number'
+              type='number'
               label='Mobile Number'
               name='number'
-              autoComplete='number'
               autoFocus
+              defaultValue={1856776675}
             />
             <TextField
               margin='normal'
@@ -116,7 +131,8 @@ const router= useRouter()
               id='password'
               autoComplete='current-password'
             />
-
+          {/* upload image  start*/}
+         <DropImage maximumImage={1}/>
             <Button
               type='submit'
               fullWidth
