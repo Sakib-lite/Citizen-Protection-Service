@@ -33,6 +33,7 @@ export default function Home() {
 
   useEffect(()=>{
     if(complaintLoading)dispatch(setLoading())
+    else if(!complaintLoading)dispatch(unsetLoading())
     else dispatch(unsetLoading())
     },[complaintLoading])
 

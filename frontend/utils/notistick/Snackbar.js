@@ -21,7 +21,7 @@ export default {
     this.toast(msg, 'error');
   },
   toast(msg, variant = 'default') {
-    useSnackbarRef.enqueueSnackbar(msg, { variant,    autoHideDuration: 1500 });
+    useSnackbarRef.enqueueSnackbar(msg, { variant,    autoHideDuration: 3000 });
   },
 };
 
