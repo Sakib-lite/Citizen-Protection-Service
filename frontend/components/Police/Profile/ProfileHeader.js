@@ -12,6 +12,7 @@ const ProfileHeader = ({ image, name, street }) => {
           <img
             src='https://res.cloudinary.com/dlgajwgag/image/upload/v1674387085/test/Dark_Blue_Modern_Discount_Banner_2_1_njsyqg.png'
             className='w-full h-44 rounded-tl-lg rounded-tr-lg object-cover'
+            alt='image'
           />
         </div>
         <div className='flex flex-col items-center -mt-20'>

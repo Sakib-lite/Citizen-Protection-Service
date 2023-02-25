@@ -21,7 +21,7 @@ const ComplaintDetails = () => {
   
   useEffect(() => {
     if (complaint?.comments) dispatch(setComment(complaint.comments));
-  }, [complaint]);
+  }, [complaint,dispatch]);
 
 
 
@@ -106,8 +106,8 @@ const ComplaintDetails = () => {
                       className='w-6 h-6'
                     >
                       <path
-                        stroke-linecap='round'
-                        stroke-linejoin='round'
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
                         d='M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z'
                       />
                     </svg>

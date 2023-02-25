@@ -89,7 +89,7 @@ export default function BarChart({stationLabel,solvedComplaints,pendingComplains
     };
     let ctx = document.getElementById("bar-chart").getContext("2d");
     window.myBar = new Chart(ctx, config);
-  }, []);
+  }, [pendingComplains,solvedComplaints,stationLabel]);
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words bg-white w-2/3 mb-6 shadow-lg rounded mx-auto">

@@ -69,7 +69,7 @@ const router= useRouter()
 
  router.push('/login')
          }   }
-  }, [data]);
+  }, [data,dispatch,router]);
 
 
   return (

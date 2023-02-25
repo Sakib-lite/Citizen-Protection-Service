@@ -26,7 +26,7 @@ const router=useRouter()
   if(!user) return null;
 
 const image=user?.image ? user.image:'https://res.cloudinary.com/dlgajwgag/image/upload/v1673944766/test/user_jwwauu.jpg'
-  const dispatch = useDispatch();
+const dispatch = useDispatch();
 
   const logoutHandler = () => {
     setAnchorEl(null);

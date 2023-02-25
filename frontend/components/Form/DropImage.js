@@ -21,7 +21,7 @@ let img=[]
 for(let image of myFiles)img.push(image.dataURL)
 
    if(myFiles.length>=1) dispatch(setImages(img));
-  }, [myFiles]);
+  }, [myFiles,dispatch,maximumImage]);
 
   const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
     // acceptedFiles: array of accepted files (similar to event.target.files):

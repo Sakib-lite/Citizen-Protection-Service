@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-import Beneficiaries from './Beneficiaries/Beneficiaries';
 import PoliceStationAbout from './PoliceStationAbout';
 import PoliceStationInfo from './PoliceStationInfo';
 import PoliceStationStatistics from './PoliceStationStatistics';

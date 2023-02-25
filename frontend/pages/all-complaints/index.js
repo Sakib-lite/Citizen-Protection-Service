@@ -12,7 +12,7 @@ const AllComplaints = () => {
   const dispatch=useDispatch()
   const { complaints:cmplts, loading:complaintLoading } = useComplaint();
   useEffect(() => {
-    if (cmplts) setComplaints(cmplts)
+    if (cmplts) dispatch(setComplaints(cmplts))
   }, [cmplts]);
 
   useEffect(()=>{

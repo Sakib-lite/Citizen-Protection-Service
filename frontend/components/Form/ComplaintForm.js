@@ -111,7 +111,7 @@ export default function ComplaintForm() {
         router.push(router.asPath);
       }
     }
-  }, [data]);
+  }, [data,dispatch,router]);
 
   return (
     <Grid container className='bg-transparent'>

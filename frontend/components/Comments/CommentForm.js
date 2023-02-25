@@ -68,7 +68,7 @@ const CommentForm = ({ id }) => {
         // router.push(router.asPath);
       }
     }
-  }, [data]);
+  }, [data,dispatch]);
 
   return (
     <Fragment>

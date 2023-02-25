@@ -19,7 +19,7 @@ const Profile = () => {
   useEffect(() => {
     if (loading) dispatch(setLoading());
     else dispatch(unsetLoading());
-  }, [loading]);
+  }, [loading,dispatch]);
 
   if (error) {
     Snackbar.error('You are not allowed to access this page');

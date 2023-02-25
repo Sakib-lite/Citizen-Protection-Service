@@ -29,22 +29,22 @@ export default function Layout({ children }) {
 
   useEffect(() => {
     if (policeStations) dispatch(setPoliceStations(policeStations));
-  }, [policeStations]);
+  }, [policeStations,dispatch]);
 
   useEffect(() => {
     if (!isLoggedIn && relativeURL !== '/login')
       router.push(`/login?redirect=${relativeURL}`);
-  }, [isLoggedIn]);
+  }, [isLoggedIn,relativeURL,router]);
 
   useEffect(() => {
     const user = Cookies.get('user');
     if (user) dispatch(login(JSON.parse(user)));
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (policeStationLoading &&user) dispatch(setLoading());
     else dispatch(unsetLoading());
-  }, [policeStationLoading]);
+  }, [policeStationLoading,dispatch]);
 
   return (
     <Fragment>

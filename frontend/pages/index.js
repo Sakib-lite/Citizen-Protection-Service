@@ -20,7 +20,7 @@ const user=useSelector(state=>state.auth.user)
 
   useEffect(() => {
     if (complaints) dispatch(setComplaint(complaints));
-  }, [complaints]);
+  }, [complaintsc]);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -29,13 +29,13 @@ const user=useSelector(state=>state.auth.user)
       }
     );
     dispatch(unsetShowModal());
-  }, []);
+  }, [dispatch]);
 
   useEffect(()=>{
     if(complaintLoading && user)dispatch(setLoading())
     else if(!complaintLoading)dispatch(unsetLoading())
     else dispatch(unsetLoading())
-    },[complaintLoading])
+    },[complaintLoading,dispatch])
 
   return (
     <Fragment>

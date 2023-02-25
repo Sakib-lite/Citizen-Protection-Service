@@ -90,7 +90,7 @@ export default function CreatePoliceStation() {
         // router.push('/login');
       }
     }
-  }, [data]);
+  }, [data,dispatch,policeStations]);
 
   //
 

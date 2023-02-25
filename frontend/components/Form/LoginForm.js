@@ -71,7 +71,7 @@ export default function LoginPage() {
         Snackbar.success('Logged In');
       }
     }
-  }, [data]);
+  }, [data,dispatch]);
 
   return (
     <Container
