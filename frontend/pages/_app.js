@@ -16,7 +16,7 @@ import { createUploadLink } from 'apollo-upload-client';
 
 const httpLink = createUploadLink({
   uri:
-    process.env.NODE_ENV === 'development'
+    process.env.ENVIRONMENT === 'development'
       ? 'http://localhost:5000/graphql'
       : 'https://citizen-protection-service-backend.vercel.app/',
 });
