@@ -20,7 +20,7 @@ const user=useSelector(state=>state.auth.user)
 
   useEffect(() => {
     if (complaints) dispatch(setComplaint(complaints));
-  }, [complaintsc]);
+  }, [complaints,dispatch]);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
