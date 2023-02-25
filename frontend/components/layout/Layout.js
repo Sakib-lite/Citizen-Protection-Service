@@ -44,7 +44,7 @@ export default function Layout({ children }) {
   useEffect(() => {
     if (policeStationLoading &&user) dispatch(setLoading());
     else dispatch(unsetLoading());
-  }, [policeStationLoading,dispatch]);
+  }, [policeStationLoading,dispatch,user]);
 
   return (
     <Fragment>

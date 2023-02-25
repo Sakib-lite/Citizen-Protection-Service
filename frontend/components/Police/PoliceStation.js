@@ -5,6 +5,7 @@ import CardActionArea from '@mui/material/CardActionArea';
 import Paper from '@mui/material/Paper';
 import Link from 'next/link';
 import { useDispatch } from 'react-redux';
+import Image from 'next/image';
 
 export default function PoliceStaion({ station }) {
   let {
@@ -26,7 +27,7 @@ console.log(image)
           <Link href={`/police-stations/${id}`} passHref>
             <CardActionArea>
               <div className='justify-center items-center mx-auto flex w-72 h-64 '>
-                <img
+                <Image
                   src={image}
                   alt='complaint'
                   width='400'

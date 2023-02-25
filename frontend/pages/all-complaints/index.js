@@ -12,14 +12,14 @@ const AllComplaints = () => {
   const dispatch=useDispatch()
   const { complaints:cmplts, loading:complaintLoading } = useComplaint();
   useEffect(() => {
-    if (cmplts) dispatch(setComplaints(cmplts))
+    if (cmplts) setComplaints(cmplts)
   }, [cmplts]);
 
   useEffect(()=>{
     if(complaintLoading)dispatch(setLoading())
     else if(!complaintLoading)dispatch(unsetLoading())
     else dispatch(unsetLoading())
-    },[complaintLoading])
+    },[complaintLoading,dispatch])
   return (
     <Fragment>
       <Layout>

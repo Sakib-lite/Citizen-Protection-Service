@@ -35,7 +35,7 @@ const user=useSelector(state=>state.auth.user)
     if(complaintLoading && user)dispatch(setLoading())
     else if(!complaintLoading)dispatch(unsetLoading())
     else dispatch(unsetLoading())
-    },[complaintLoading,dispatch])
+    },[complaintLoading,dispatch,user])
 
   return (
     <Fragment>

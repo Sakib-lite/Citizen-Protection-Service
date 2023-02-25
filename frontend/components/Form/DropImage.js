@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback, Fragment } from 'react';
 import { useDropzone } from 'react-dropzone';
-// =============== Our Styles ======================
 import classes from './DropImage.module.css';
 import Button from '@mui/material/Button';
 import { getProperThumbnail, sliceName } from '../../utils/helpers';
 import { useDispatch } from 'react-redux';
 import { setImages } from '../store/complaintSlice';
+import Image from 'next/image';
+
 
 const DropImage = ({maximumImage}) => {
   const [myFiles, setMyFiles] = useState([]);  
@@ -73,10 +74,12 @@ for(let image of myFiles)img.push(image.dataURL)
         {myFiles.map((file, index) => {
           return (
             <div key={index} className={classes.filePreviewItem}>
-              <img
+              <Image
                 // src={file.dataURL}
                 src={getProperThumbnail(file)}
                 className={classes.fileThumbnail}
+              height='50'
+              width='50'
               />
               <span className={classes.span}>
                 {sliceName(file.fileInfo.name)}

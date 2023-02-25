@@ -22,11 +22,11 @@ export default function CardComponent({ complaint }) {
           <Link href={`/complaint/${id}`} passHref>
             <CardActionArea>
               <div className='justify-center items-center mx-auto flex w-72 h-64 '>
-                <img
+                <Image
                   src={image}
                   alt='complaint'
                   width='400'
-                  height='400'
+                  height='300'
                   className='w-full rounded-lg'
                 />
               </div>

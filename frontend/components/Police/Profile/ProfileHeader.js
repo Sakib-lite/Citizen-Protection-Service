@@ -3,16 +3,20 @@ import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import { StyledBadge } from '../../../utils/styles';
+import Image from 'next/image';
 
 const ProfileHeader = ({ image, name, street }) => {
   return (
     <Fragment>
       <div className='bg-white rounded-lg shadow-xl pb-8'>
         <div className='w-full h-[250px]'>
-          <img
+          <Image
             src='https://res.cloudinary.com/dlgajwgag/image/upload/v1674387085/test/Dark_Blue_Modern_Discount_Banner_2_1_njsyqg.png'
             className='w-full h-44 rounded-tl-lg rounded-tr-lg object-cover'
             alt='image'
+            height='300'
+            width='1300'
+            layout='responsive'
           />
         </div>
         <div className='flex flex-col items-center -mt-20'>

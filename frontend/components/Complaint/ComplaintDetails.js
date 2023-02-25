@@ -10,6 +10,8 @@ import CommentForm from '../Comments/CommentForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { setComment } from '../store/commentSlice';
 import ChangleComplaintType from './ChangeComplaintType';
+import Image from 'next/image';
+
 
 const ComplaintDetails = () => {
   const user=useSelector(state=>state.auth.user)
@@ -56,11 +58,13 @@ const ComplaintDetails = () => {
               <div className='grid md:grid-cols-2 gap-8'>
                 <div className='space-y-4'>
                   <div className='bg-gray-100 dark:bg-dark-800 rounded-lg overflow-hidden relative'>
-                    <img
+                    <Image
                       src={featuredImage}
                       loading='lazy'
                       alt='Photo by Himanshu Dewangan'
                       className='w-full h-full object-cover object-center'
+                      height='300'
+                      width='600'
                     />
 
                     <span
@@ -75,10 +79,12 @@ const ComplaintDetails = () => {
                       complaint?.images.map((url, index) =>
                         index !== 0 ? (
                           <div className='bg-gray-100 rounded-lg overflow-hidden'>
-                            <img
+                            <Image
                               src={url}
                               alt='Photo by Himanshu Dewangan'
                               className='w-full h-full object-cover object-center'
+                            height='200'
+                            width='300'
                             />
                           </div>
                         ) : null

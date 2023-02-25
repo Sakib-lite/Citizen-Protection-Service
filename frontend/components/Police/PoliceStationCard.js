@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import ActionCard from './ActionCard';
+import Image from 'next/image';
 
 const PoliceStationCard = ({
   image,
@@ -36,10 +37,12 @@ const PoliceStationCard = ({
             </div>
           </div>
           <div>
-            <img
+            <Image
               className='object-cover w-full h-56 rounded shadow-lg sm:h-96'
               src={featuredImage}
-              alt=''
+              alt='image'
+              height='400'
+              width='600'
             />
           </div>
         </div>
