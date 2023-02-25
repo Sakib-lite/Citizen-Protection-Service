@@ -18,8 +18,8 @@ const httpLink = createUploadLink({
   uri:
     process.env.ENVIRONMENT === 'development'
       ? 'http://localhost:5000/graphql'
-      : 'https://citizen-protection-service-backend.vercel.app/',
-});
+      : 'https://citizen-protection-service-backend.vercel.app/graphql',
+}); 
 
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
