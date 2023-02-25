@@ -80,6 +80,7 @@ for(let image of myFiles)img.push(image.dataURL)
                 className={classes.fileThumbnail}
               height='50'
               width='50'
+              alt='image'
               />
               <span className={classes.span}>
                 {sliceName(file.fileInfo.name)}
