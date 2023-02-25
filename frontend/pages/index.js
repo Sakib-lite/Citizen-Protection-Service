@@ -14,7 +14,7 @@ import { setComplaint } from '../components/store/complaintSlice';
 
 export default function Home() {
   const [coords, setCoords] = useState({}); // user's current location
-
+const user=useSelector(state=>state.auth.user)
   const { complaints, loading:complaintLoading } = useComplaint();
   const dispatch = useDispatch();
 
@@ -32,7 +32,7 @@ export default function Home() {
   }, []);
 
   useEffect(()=>{
-    if(complaintLoading)dispatch(setLoading())
+    if(complaintLoading && user)dispatch(setLoading())
     else if(!complaintLoading)dispatch(unsetLoading())
     else dispatch(unsetLoading())
     },[complaintLoading])

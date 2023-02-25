@@ -35,14 +35,13 @@ exports.commentResolvers = {
       author.save();
 
       complaint.comments.push(newComment);
-      complaint.save()
+      complaint.save();
 
       return {
         userErrors: [],
-        comment:newComment,
+        comment: newComment,
       };
     } catch (err) {
-  
       return Error(err.message);
     }
   },
@@ -68,6 +67,42 @@ exports.commentResolvers = {
       return {
         userErrors: [],
         comment,
+      };
+    } catch (e) {
+      return Error(e.message);
+    }
+  },
+  commentDelete: async (_, { id }, { models, userInfo }) => {
+    try {
+      const { Comment, User, Complaint } = models;
+      const user = await User.findById(userInfo.id);
+
+      if (!user) return Error('You are not logged in');
+
+      if (!id) return Error('Empty id field');
+
+      const comment = await Comment.findById(id);
+      if (!comment) return Error('No comment found with this id');
+
+      const author = await User.findOneAndUpdate(
+        { _id: comment.author },
+        { $pull: { comments: id } },
+        { new: true }
+      );
+      if (!author) return Error('No author found with this id');
+
+      const complaint = await Complaint.findOneAndUpdate(
+        { _id: comment.complaint },
+        { $pull: { comments: id } },
+        { new: true }
+      );
+      if (!complaint) return Error('No complaint found with this id');
+
+      await Comment.findByIdAndDelete(id);
+
+      return {
+        userErrors: [],
+        comment: null,
       };
     } catch (e) {
       return Error(e.message);

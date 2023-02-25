@@ -57,6 +57,7 @@ exports.authResolvers = {
       };
     } catch (err) {
       console.log(err);
+      return Error(err.message);
     }
   },
   signin: async (_, { credentials }, { models }) => {
@@ -71,10 +72,7 @@ exports.authResolvers = {
       let isMatch = await bcrypt.compare(password, user.password); //matching password
 
       if (!isMatch) {
-        return {
-          userErrors: [{ message: 'Invalid credentials' }], //sending error
-          token: null,
-        };
+        return Error('Invalid credentials' )
       }
 
       return {
@@ -84,19 +82,19 @@ exports.authResolvers = {
       };
     } catch (err) {
       console.log(err);
+      return Error(err.message);
     }
   },
-  userUpdate: async (_, { input }, { models, userInfo }) => {
+  userUpdate: async (_, { input,id }, { models, userInfo }) => {
     try {
       const { User } = models; //getting user model from context
 
-      const author = await User.findById(userInfo.id);
-      if (!author) return Error('You are not logged in');
+      // const author = await User.findById(userInfo.id);
+      // if (!author) return Error('You are not logged in');
 
       if (!input) return Error('Empty field');
 
       const obj = filterObj(input);
-
       const user = await User.findByIdAndUpdate(id, obj, {
         new: true,
         runValidators: true,
@@ -110,6 +108,7 @@ exports.authResolvers = {
       };
     } catch (err) {
       console.log(err);
+      return Error(err.message);
     }
   },
 };

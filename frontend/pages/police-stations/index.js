@@ -33,7 +33,7 @@ const PoliceStations = () => {
         <Grid
           container
           columns={{ xs: 4, sm: 8, md: 8 }}
-          className='mb-10 mx-2 gap-5'
+          className='mb-10 pt-4 gap-5 justify-center'
         >
           {policeStations.length > 0 &&
             policeStations.map((station) => (

@@ -15,6 +15,7 @@ export default function Layout({ children }) {
   const router = useRouter();
   const loading = useSelector((state) => state.ui.loading);
   const { isLoggedIn } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const { policeStations, loading: policeStationLoading } = usePoliceStation();
 
   let relativeURL = '';
@@ -41,7 +42,7 @@ export default function Layout({ children }) {
   }, []);
 
   useEffect(() => {
-    if (policeStationLoading) dispatch(setLoading());
+    if (policeStationLoading &&user) dispatch(setLoading());
     else dispatch(unsetLoading());
   }, [policeStationLoading]);
 

@@ -10,6 +10,9 @@ import Container from '@mui/material/Container';
 import TakeoutDiningIcon from '@mui/icons-material/TakeoutDining';
 import { useDispatch, useSelector } from 'react-redux';
 import CancelIcon from '@mui/icons-material/Cancel';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import { setLoading, unsetLoading, unsetShowModal } from '../store/ui-slice';
 import { gql, useMutation } from '@apollo/client';
 import Snackbar from './../../utils/notistick/Snackbar';
@@ -17,7 +20,6 @@ import { useComplaint } from '../../utils/hooks';
 import { deleteImages, addComplaint } from '../store/complaintSlice';
 import DropImage from './DropImage';
 import { useRouter } from 'next/router';
-
 
 const COMPLAINT = gql`
   mutation (
@@ -31,22 +33,23 @@ const COMPLAINT = gql`
       }
       complaint {
         id
-      title
-      description
-      images
-      status
-      location {
-        coordinates
-      }
-      policeStation {
-        id
-      }
+        title
+        description
+        images
+        status
+        location {
+          coordinates
+        }
+        policeStation {
+          id
+        }
       }
     }
   }
 `;
 
 export default function ComplaintForm() {
+  const [complaintType, setComplaintType] = React.useState(true);
   const [complaintCreate, { data }] = useMutation(COMPLAINT);
   const coordinates = useSelector((state) => state.location.coordinates);
   const { user } = useSelector((state) => state.auth);
@@ -54,31 +57,37 @@ export default function ComplaintForm() {
   const { complaints, loading } = useComplaint();
   const images = useSelector((state) => state.complaint.images);
   const router = useRouter();
+
+  const changeComplaintType = (type) => {
+    setComplaintType(type);
+  };
+
   const handleSubmit = (event) => {
-try{
-    event.preventDefault();
-    // if (!user) {
-    //   Snackbar.error('Please login first');
-    //   return;
-    // }
-    const formData = new FormData(event.currentTarget);
-    dispatch(setLoading());
-    complaintCreate({
-      variables: {
-        input: {
-          title: formData.get('title'),
-          description: formData.get('description'),
-          public: true,
+    try {
+      event.preventDefault();
+      // if (!user) {
+      //   Snackbar.error('Please login first');
+      //   return;
+      // }
+      const formData = new FormData(event.currentTarget);
+      dispatch(setLoading());
+      complaintCreate({
+        variables: {
+          input: {
+            title: formData.get('title'),
+            description: formData.get('description'),
+            public: complaintType,
+          },
+          location: {
+            type: 'Point',
+            coordinates: coordinates,
+          },
+          images: images,
         },
-        location: {
-          type: 'Point',
-          coordinates: coordinates,
-        },
-        images: images,
-      },
-    })}catch(e){
+      });
+    } catch (e) {
       dispatch(unsetLoading());
-}
+    }
   };
 
   const handleClick = (e) => {
@@ -94,11 +103,11 @@ try{
         dispatch(unsetLoading());
         Snackbar.error(data.complaintCreate.userErrors[0].message);
       } else {
-      dispatch(  unsetLoading());
+        dispatch(unsetLoading());
         Snackbar.success('Complaint Created');
         dispatch(addComplaint(data.complaintCreate.complaint));
         dispatch(unsetShowModal());
-        dispatch(deleteImages())
+        dispatch(deleteImages());
         router.push(router.asPath);
       }
     }
@@ -159,18 +168,19 @@ try{
               autoComplete='description'
             />
 
-            <TextField
-              margin='normal'
-              required
-              fullWidth
-              name='cell'
-              label='Public'
-              type='number'
-              id='cell'
-              autoComplete='true'
-            />
+<div className='my-2'>
+                <InputLabel id='demo-simple-select-label'>Public</InputLabel>
+                <Select
+                  onChange={(event) => changeComplaintType(event.target.value)}
+                  value={complaintType}
+                  label='Public'
+                >
+                  <MenuItem value={true}>True</MenuItem>
+                  <MenuItem value={false}>False</MenuItem>
+                </Select>
+              </div>
             {/* drop images */}
-            <DropImage maximumImage={5}/>
+            <DropImage maximumImage={5} />
 
             <Button
               type='submit'

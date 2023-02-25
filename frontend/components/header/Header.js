@@ -56,18 +56,19 @@ export default function Header() {
     <Fragment>
       <AppBar
         position='sticky'
-        className='bg-gray-200 dark:bg-gray-500 md:px-2 px-1  '
+        className='bg-gray-200 dark:bg-gray-400 md:px-2 px-1  '
       >
         <Toolbar>
           <Link href='/'>
             <a className='flex items-center '>
               <div className=''>
-                <Image width='100px' height='100px' alt='logo' src={img} priority={true}/>
+                <Image width='80px' height='80px' alt='logo' src={img} priority={true}/>
               </div>
             
             </a>
           </Link>
-       <div className="flex  ml-auto">  <div className="md:mr-20 sm:mr-16"> <SearchBar /></div>
+       <div className="flex  ml-auto">  
+       {/* <div className="md:mr-20 sm:mr-16"> <SearchBar /></div> */}
 
           {!matches && (
             <div className='flex items-center'>

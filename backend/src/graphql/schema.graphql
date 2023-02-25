@@ -4,12 +4,15 @@ scalar Date
 type Query {
   users: [User!]!
   user: User
-  complaints: [Complaint!]!
+  complaints: [Complaint]!
   complaint(id: ID!): Complaint
+  complaintsByStatus(status:String!): [Complaint]
+  complaintFilter(type:String!):[ComplaintChart]
   comments: [Comment]
   comment(id: ID!): Comment
   policeStations: [PoliceStation!]!
   policeStation(id: ID!): PoliceStation
+  
 }
 
 type Mutation {
@@ -29,9 +32,10 @@ type Mutation {
     location: LocationInput!
     images: [Upload]
   ): ComplaintPayload!
-  complaintUpdate(id: ID!, status: String!): ComplaintPayload!
+  complaintUpdate(id: ID!, input: ComplaintUpdateInput!): ComplaintPayload!
   commentCreate(input: CommentInput!): CommentPayload!
-  commentUpdate(id: ID!, input: CommentUpdate): CommentPayload!
+  commentUpdate(id: ID!, input: CommentUpdate!): CommentPayload!
+  commentDelete(id: ID!): CommentPayload!
   userUpdate(id: ID!, input: UserInput!): AuthPayload!
 }
 
@@ -44,6 +48,14 @@ type User {
   comments: [Comment!]!
   image: String
   createdAt: Date!
+  banned:Boolean
+  
+}
+
+type ComplaintChart{
+count:Int
+name:String
+
 }
 
 type Complaint {
@@ -60,6 +72,12 @@ type Complaint {
   createdAt: Date!
 }
 
+type ComplaintFilter{
+id:ID!
+policeStation:PoliceStation
+total:Int
+
+}
 type PoliceStation {
   id: ID!
   name: String!
@@ -121,6 +139,11 @@ input Credentials {
 input UserInput {
   role: String
   banned: Boolean
+}
+
+input ComplaintUpdateInput {
+  status: String
+  public: Boolean
 }
 
 input StationInput {

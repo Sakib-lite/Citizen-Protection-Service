@@ -1,5 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import { gql, useQuery, useMutation } from '@apollo/client';
+import React, { Fragment, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../layout/Layout';
 import PoliceStationCard from '../Police/PoliceStationCard';
@@ -8,17 +7,18 @@ import { useComplaintById } from '../../utils/hooks';
 import Loading from '../layout/Loading';
 import AllComments from '../Comments/AllComments';
 import CommentForm from '../Comments/CommentForm';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setComment } from '../store/commentSlice';
+import ChangleComplaintType from './ChangeComplaintType';
 
 const ComplaintDetails = () => {
+  const user=useSelector(state=>state.auth.user)
   const router = useRouter();
   const { slug } = router.query;
   const dispatch = useDispatch();
-
   const { complaint, loading, error } = useComplaintById(slug);
 
-
+  
   useEffect(() => {
     if (complaint?.comments) dispatch(setComment(complaint.comments));
   }, [complaint]);
@@ -28,9 +28,12 @@ const ComplaintDetails = () => {
   if (loading) return <Loading />;
   if (error) return <p className='text-red-300'></p>;
 
+
   const createdAt = moment(complaint.createdAt).format('MMMM Do YYYY');
 
-  const { comments, id } = complaint;
+  const { comments, id,public:type,status,author } = complaint;
+
+ 
 
   const {
     name,
@@ -93,7 +96,7 @@ const ComplaintDetails = () => {
                     </h2>
                   </div>
 
-                  <div className='flex items-center text-gray-500 dark:text-gray-100  gap-2 mb-6'>
+                  <div className='flex items-center text-gray-500 dark:text-gray-100  gap-2 mb-2'>
                     <svg
                       xmlns='http://www.w3.org/2000/svg'
                       fill='none'
@@ -111,14 +114,9 @@ const ComplaintDetails = () => {
 
                     <span className='text-sm'>{createdAt}</span>
                   </div>
-
+                  <div className='flex items-center text-gray-500 dark:text-gray-100  gap-2 mb-6'>Type: <span className='text-sm'>{type?"Public":'Private'}</span></div>
                   <div className='flex gap-2.5'>
-                    <a
-                      href='#'
-                      className='inline-block flex-1 sm:flex-none bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 focus-visible:ring ring-indigo-300 text-white text-sm md:text-base font-semibold text-center rounded-lg outline-none transition duration-100 px-8 py-3'
-                    >
-                      Change to Private
-                    </a>
+               {status==='pending' && (author?.id===user?.id || user?.role==='admin')&&      <ChangleComplaintType id={slug} type={type}/> }
                   </div>
 
                   <div className='mt-10 md:mt-16 lg:mt-20'>
@@ -148,7 +146,7 @@ const ComplaintDetails = () => {
               </div>{' '}
             </div>
             <div className='flex-1 bg-white rounded-lg shadow-xl p-8 mt-16'>
-              <AllComments />
+              <AllComments complaintId={id}/>
               <CommentForm id={id} />
             </div>
           </div>{' '}

@@ -20,6 +20,7 @@ const COMMENT = gql`
         createdAt
         author {
           image
+          id
           name
         }
       }
@@ -74,7 +75,7 @@ const CommentForm = ({ id }) => {
       <form onSubmit={submitHandler} className='w-2/3 mx-auto mt-4'>
         <List>
           <ListItem>
-            <Typography className='text-2xl font-meduim dark:text-gray-100'>
+            <Typography className='text-2xl font-meduim '>
               Leave your Comment
             </Typography>
           </ListItem>

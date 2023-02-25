@@ -8,24 +8,33 @@ import Button from '@mui/material/Button';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { COMPLAINT_UPDATE } from '../../utils/schema';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { setLoading, unsetLoading } from '../store/ui-slice';
 
 const ActionCard = ({ status }) => {
-
+const dispatch =useDispatch()
   const router = useRouter();
   const { slug } = router.query;
 
-  const [update] = useMutation(COMPLAINT_UPDATE);
+  const [update,{loading}] = useMutation(COMPLAINT_UPDATE);
 
   const solveHandler = () => {
     update({
       variables: {
-        status: 'solved',
+     input:{   status: 'solved'},
         complaintUpdateId: slug,
       },
     });
 
     router.push(router.asPath);
   };
+
+useEffect(()=>{
+if(loading) dispatch(setLoading())
+else dispatch(unsetLoading())
+},[loading])
+
 
   return (
     <Fragment>

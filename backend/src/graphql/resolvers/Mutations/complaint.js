@@ -3,9 +3,12 @@ const { checkWord } = require('../../../utils/filterSlang');
 const unitValue = 1000;
 const cloudinary = require('cloudinary').v2;
 const natural = require('natural');
+const { filterObj } = require('../../../utils/filterObj');
 const distance = 50;
 const policeHeadquaterId = '63cfc6f16ce1fd0f73568692';
-
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = require('twilio')(accountSid, authToken);
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -21,6 +24,19 @@ const Error = (msg = 'Something went wrong') => {
     ],
     complaint: null,
   };
+};
+
+const sendSms = async (authorityNumber, message) => {
+  try {
+    const response = await client.messages.create({
+      body: message,
+      from: '+18653446021',
+      to: `+880${authorityNumber}`,
+    });
+    console.log(response);
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 exports.complaintResolvers = {
@@ -49,35 +65,34 @@ exports.complaintResolvers = {
 
       //NEED TO BE FIXED⛔⛔⛔
 
-    if(slangWords){
-      tokenizedTitle.forEach((word) => {
-        if (checkWord(slangWords, word)) {
-          return Error(`"${word}" is slang in title`);
-        }
-      });
+      if (slangWords) {
+        tokenizedTitle.forEach((word) => {
+          if (checkWord(slangWords, word)) {
+            return Error(`"${word}" is slang in title`);
+          }
+        });
 
-      tokenizedDescription.forEach((word) => {
-        if (checkWord(slangWords, word)) {
-          return Error(`"${word}" is slang in description`);
-        }
-      });
-    }  
+        tokenizedDescription.forEach((word) => {
+          if (checkWord(slangWords, word)) {
+            return Error(`"${word}" is slang in description`);
+          }
+        });
+      }
 
-   if(rumourWordsSet){
+      if (rumourWordsSet) {
+        tokenizedTitle.forEach((word) => {
+          if (checkWord(rumourWordsSet, word)) {
+            public = false;
+          }
+        });
 
-     tokenizedTitle.forEach((word) => {
-       if (checkWord(rumourWordsSet, word)) {
-         public = false;
-        }
-      });
-      
-      tokenizedDescription.forEach((word) => {
-        if (checkWord(rumourWordsSet, word)) {
-          public = false;
-        }
-      });
-    }
-      
+        tokenizedDescription.forEach((word) => {
+          if (checkWord(rumourWordsSet, word)) {
+            public = false;
+          }
+        });
+      }
+
       for (let image of images) {
         const uploadResponse = await cloudinary.uploader.upload(image, {
           upload_preset: 'd3z47zme',
@@ -131,11 +146,12 @@ exports.complaintResolvers = {
         const policeStation = await PoliceStation.findById(closest[0]._id);
         policeStation.complaints.push(complaint);
         policeStation.save();
-
+        // await sendSms(policeStation.number,title)
       } else {
         const policeStation = await PoliceStation.findById(policeHeadquaterId);
         policeStation.complaints.push(complaint);
         policeStation.save();
+        // await sendSms(policeStation.number,title)
       }
 
       return {
@@ -147,22 +163,19 @@ exports.complaintResolvers = {
     }
   },
 
-  complaintUpdate: async (_, { id, status }, { models, userInfo }) => {
+  complaintUpdate: async (_, { id, input }, { models, userInfo }) => {
     try {
       const { Complaint, User } = models;
       const author = await User.findById(userInfo.id);
 
       if (!author) return Error('You are not logged in');
 
-      if (!status) return Error('Please fill up the status field');
-      const complaint = await Complaint.findByIdAndUpdate(
-        id,
-        { status },
-        {
-          new: true,
-          runValidators: true,
-        }
-      );
+      const complaintObj = filterObj(input);
+
+      const complaint = await Complaint.findByIdAndUpdate(id, complaintObj, {
+        new: true,
+        runValidators: true,
+      });
 
       if (!complaint) return Error('No Complaint found with this id');
 

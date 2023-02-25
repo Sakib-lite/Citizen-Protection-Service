@@ -3,6 +3,7 @@ import CardComponent from './CardComponent';
 import Grid from '@mui/material/Grid';
 
 export default function AllCards({ complaints }) {
+  if(!complaints) return <p1 className="font-medium leading-tight text-5xl mt-0 mb-2 text-blue-600">No Complaints yey</p1>
   return (
     <Fragment>
       <Grid

@@ -12,6 +12,7 @@ export default function NavOptions() {
   const policeStations = useSelector(
     (state) => state.policeStations.policeStations
   );
+  const role = useSelector((state) => state.auth?.user?.role);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -32,15 +33,17 @@ export default function NavOptions() {
             Home{' '}
           </Button>
         </Link>
-        <Link href='/all-complaints' passHref>
-          <Button
-            variant='outlined'
-            className='text-gray-500 dark:text-gray-100 border-transparent hover:border-current'
-          >
-          All Complaints
-          </Button>
-        </Link>
-        <Link href='/police-stations/create-policestation' passHref>
+       
+          <Link href='/all-complaints' passHref>
+            <Button
+              variant='outlined'
+              className='text-gray-500 dark:text-gray-100 border-transparent hover:border-current'
+            >
+              All Complaints
+            </Button>
+          </Link>
+      
+       {role !== 'user' && (  <Link href='/police-stations/create-policestation' passHref>
           <Button
             variant='outlined'
             className='text-gray-500 dark:text-gray-100 border-transparent hover:border-current'
@@ -48,7 +51,7 @@ export default function NavOptions() {
             Create Station
           </Button>
         </Link>
-
+  )}
         <Button
           variant='outlined'
           className='text-gray-500 dark:text-gray-100 border-transparent hover:border-current'
@@ -73,7 +76,11 @@ export default function NavOptions() {
       >
         {policeStations.length > 0 ? (
           policeStations.map((station) => (
-            <Link key={station.id}  href={`/police-stations/${station.id}`} passHref>
+            <Link
+              key={station.id}
+              href={`/police-stations/${station.id}`}
+              passHref
+            >
               <MenuItem onClick={handleClose}>{station.name}</MenuItem>
             </Link>
           ))

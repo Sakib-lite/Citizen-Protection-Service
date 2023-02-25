@@ -28,6 +28,7 @@ const SIGNIN = gql`
         name
         number
         image
+        role
       }
     }
   }
