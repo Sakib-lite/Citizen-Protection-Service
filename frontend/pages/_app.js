@@ -10,28 +10,25 @@ import { SnackbarProvider } from 'notistack';
 import store from '../components/store/store';
 import Collapse from '@mui/material/Collapse';
 import { SnackbarUtilsConfigurator } from '../utils/notistick/Snackbar';
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-} from "@apollo/client";
-import { setContext } from "@apollo/client/link/context";
-import { createUploadLink } from "apollo-upload-client";
-
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import { createUploadLink } from 'apollo-upload-client';
 
 const httpLink = createUploadLink({
-  uri: "http://localhost:5000/graphql",
+  uri:
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:5000/graphql'
+      : 'https://citizen-protection-service-backend.vercel.app/',
 });
 
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
   // return the headers to the context so httpLink can read them
   return {
     headers: {
       ...headers,
       authorization: token,
-      
     },
   };
 });
@@ -45,9 +42,7 @@ const generateClassName = createGenerateClassName({
 });
 
 function MyApp({ Component, pageProps }) {
-
-// this mess created for solving mui server side issue
-
+  // this mess created for solving mui server side issue
 
   useEffect(() => {
     const jssStyles = document.querySelector('#jss-server-side');
@@ -72,8 +67,11 @@ function MyApp({ Component, pageProps }) {
                   }}
                   TransitionComponent={Collapse}
                 >
-                  <SnackbarUtilsConfigurator />  <ApolloProvider client={client}><Component {...pageProps} />
-              </ApolloProvider>   </SnackbarProvider>
+                  <SnackbarUtilsConfigurator />{' '}
+                  <ApolloProvider client={client}>
+                    <Component {...pageProps} />
+                  </ApolloProvider>{' '}
+                </SnackbarProvider>
               </StylesProvider>
             </ThemeProvider>
           </ClientOnly>
