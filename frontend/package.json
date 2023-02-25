@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@apollo/client": "^3.0.0",
     "@babel/runtime": "^7.17.9",
     "@emotion/cache": "^11.7.1",
     "@emotion/react": "^11.9.0",
