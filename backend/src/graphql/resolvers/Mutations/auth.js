@@ -72,9 +72,9 @@ exports.authResolvers = {
       let isMatch = await bcrypt.compare(password, user.password); //matching password
 
       if (!isMatch) {
-        return Error('Invalid credentials' )
+        return Error('Wrong number or password');
       }
-
+      if (user.banned) return Error('You are banned from this application');
       return {
         userErrors: [],
         token: sendToken(user.id),
@@ -85,7 +85,7 @@ exports.authResolvers = {
       return Error(err.message);
     }
   },
-  userUpdate: async (_, { input,id }, { models, userInfo }) => {
+  userUpdate: async (_, { input, id }, { models, userInfo }) => {
     try {
       const { User } = models; //getting user model from context
 
