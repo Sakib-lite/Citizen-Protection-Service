@@ -190,10 +190,13 @@ exports.complaintResolvers = {
       });
 
       if (!complaint) return Error('No Complaint found with this id');
+      console.log(status);
+      const complaintAuthor = await User.findById(complaint.author);
+
       if (status)
         await sendSms(
           author.number,
-          `Your complaint "${title}" is solved now. Have a good day. Best wishes from Citizen Protection Service.`
+          `Dear ${complaintAuthor.name}, your complaint "${complaint.title}" is solved now. Help us to build a safer city. Have a good day. Best wishes from Citizen Protection Service.`
         );
       return {
         userErrors: [],
