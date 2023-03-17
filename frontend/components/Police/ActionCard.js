@@ -13,16 +13,15 @@ import { useEffect } from 'react';
 import { setLoading, unsetLoading } from '../store/ui-slice';
 
 const ActionCard = ({ status }) => {
-const dispatch =useDispatch()
+  const dispatch = useDispatch();
   const router = useRouter();
   const { slug } = router.query;
-
-  const [update,{loading}] = useMutation(COMPLAINT_UPDATE);
+  const [update, { loading }] = useMutation(COMPLAINT_UPDATE);
 
   const solveHandler = () => {
     update({
       variables: {
-     input:{   status: 'solved'},
+        input: { status: 'solved' },
         complaintUpdateId: slug,
       },
     });
@@ -30,11 +29,10 @@ const dispatch =useDispatch()
     router.push(router.asPath);
   };
 
-useEffect(()=>{
-if(loading) dispatch(setLoading())
-else dispatch(unsetLoading())
-},[loading,dispatch])
-
+  useEffect(() => {
+    if (loading) dispatch(setLoading());
+    else dispatch(unsetLoading());
+  }, [loading, dispatch]);
 
   return (
     <Fragment>
@@ -56,18 +54,19 @@ else dispatch(unsetLoading())
               </Grid>
             </ListItem>
             <ListItem>
-              <Button
-                fullWidth
-                variant='contained'
-                color='primary'
-                onClick={solveHandler}
-              >
-                Mark as Solved
-              </Button>
+              {status === 'pending' && (
+                <Button
+                  fullWidth
+                  variant='contained'
+                  color='primary'
+                  onClick={solveHandler}
+                >
+                  Mark as Solved
+                </Button>
+              )}
             </ListItem>
           </List>
         </Card>
-    
       </Grid>
     </Fragment>
   );
