@@ -26,12 +26,12 @@ const Error = (msg = 'Something went wrong') => {
   };
 };
 
-const sendSms = async (authorityNumber, message) => {
+const sendSms = async (number, message) => {
   try {
     const response = await client.messages.create({
       body: message,
       from: '+18653446021',
-      to: `+880${authorityNumber}`,
+      to: `+880${number}`,
     });
     console.log(response);
   } catch (err) {
@@ -62,8 +62,6 @@ exports.complaintResolvers = {
       const tokenizer = new natural.WordTokenizer();
       const tokenizedTitle = tokenizer.tokenize(title);
       const tokenizedDescription = tokenizer.tokenize(description);
-
-      //NEED TO BE FIXED⛔⛔⛔
 
       if (slangWords) {
         tokenizedTitle.forEach((word) => {
@@ -146,12 +144,26 @@ exports.complaintResolvers = {
         const policeStation = await PoliceStation.findById(closest[0]._id);
         policeStation.complaints.push(complaint);
         policeStation.save();
-        // await sendSms(policeStation.number,title)
+        await sendSms(
+          policeStation.number,
+          `New complaint "${title}" is filed in your police station.`
+        );
+        await sendSms(
+          author.number,
+          `Your complaint "${title}" is filed in ${policeStation.name}.`
+        );
       } else {
         const policeStation = await PoliceStation.findById(policeHeadquaterId);
         policeStation.complaints.push(complaint);
         policeStation.save();
-        // await sendSms(policeStation.number,title)
+        await sendSms(
+          policeStation.number,
+          `New complaint "${title}" is filed in your police station.`
+        );
+        await sendSms(
+          author.number,
+          `Your complaint "${title}" is filed in ${policeStation.name}.`
+        );
       }
 
       return {
@@ -167,7 +179,7 @@ exports.complaintResolvers = {
     try {
       const { Complaint, User } = models;
       const author = await User.findById(userInfo.id);
-
+      const { status } = input;
       if (!author) return Error('You are not logged in');
 
       const complaintObj = filterObj(input);
@@ -178,7 +190,11 @@ exports.complaintResolvers = {
       });
 
       if (!complaint) return Error('No Complaint found with this id');
-
+      if (status)
+        await sendSms(
+          author.number,
+          `Your complaint "${title}" is solved now. Have a good day. Best wishes from Citizen Protection Service.`
+        );
       return {
         userErrors: [],
         complaint,
