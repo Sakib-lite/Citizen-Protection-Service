@@ -120,7 +120,12 @@ const ComplaintDetails = () => {
 
                     <span className='text-sm'>{createdAt}</span>
                   </div>
-                  <div className='flex items-center text-gray-500 dark:text-gray-100  gap-2 mb-6'>Type: <span className='text-sm'>{type?"Public":'Private'}</span></div>
+                  <div className='flex items-center text-gray-500 dark:text-gray-100  gap-2 '>Type: <span className='text-sm'>{type?"Public":'Private'}</span></div>
+           {   type &&   <div className='flex items-center text-gray-500 dark:text-gray-100  gap-2 '>Author: <span className='text-sm'>{author?.name}</span></div>
+                 }
+    {  (author?.id===user?.id || user?.role==='admin')&& type &&   <div className='flex items-center text-gray-500 dark:text-gray-100  gap-2 mb-6'>Mobile Number: <span className='text-sm'>+880{author?.number}</span></div>
+                 }
+                 
                   <div className='flex gap-2.5'>
                {status==='pending' && (author?.id===user?.id || user?.role==='admin')&&      <ChangleComplaintType id={slug} type={type}/> }
                   </div>
@@ -139,7 +144,7 @@ const ComplaintDetails = () => {
             </div>
 
             <div className='bg-gray-200 dark:bg-gray-500 '>
-              <div className='mx-20 rounded-lg  '>
+              <div className='mx-auto md:w-3/4 rounded-lg  '>
                 {' '}
                 <PoliceStationCard
                   name={name}
@@ -151,7 +156,7 @@ const ComplaintDetails = () => {
                 />
               </div>{' '}
             </div>
-            <div className='flex-1 bg-white rounded-lg shadow-xl p-8 mt-16'>
+            <div className='flex-1 bg-white rounded-lg shadow-xl md:p-8 sm:p-4 p-1 mt-16'>
               <AllComments complaintId={id}/>
               <CommentForm id={id} />
             </div>

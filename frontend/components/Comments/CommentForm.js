@@ -72,10 +72,10 @@ const CommentForm = ({ id }) => {
 
   return (
     <Fragment>
-      <form onSubmit={submitHandler} className='w-2/3 mx-auto mt-4'>
+      <form onSubmit={submitHandler} className='md:w-2/3 w-full bg-gray-100 rounded-lg mx-auto mt-4'>
         <List>
           <ListItem>
-            <Typography className='text-2xl font-meduim '>
+            <Typography className='md:text-2xl sm:text-lg text-sm font-meduim '>
               Leave your Comment
             </Typography>
           </ListItem>
@@ -88,7 +88,7 @@ const CommentForm = ({ id }) => {
               label='Enter comment'
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              className='dark:text-white  dark:bg-gray-500'
+              className=''
             />
           </ListItem>
           <ListItem>

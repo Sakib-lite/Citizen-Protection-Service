@@ -37,15 +37,15 @@ const Comment = ({
       >
         <div className='flex items-center mb-4 space-x-4'>
           <Avatar sx={{ width: 32, height: 32 }} src={image} />
-          <div className='space-y-1 font-medium dark:text-gray-300'>
+          <div className='space-y-1 font-medium '>
             <p>{name} </p>
           </div>
         </div>
 
-        <p className='mt-2 text-gray-700 dark:text-gray-300'>{comment}</p>
+        <p className='mt-2 text-gray-700 '>{comment}</p>
 
         <footer className='mt-4'>
-          <p className='text-xs text-gray-500 dark:text-gray-300'>
+          <p className='text-xs text-gray-500 '>
             {createdAt?.substring(0, 10)}
           </p>
         </footer>

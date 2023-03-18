@@ -34,6 +34,8 @@ const ActionCard = ({ status }) => {
     else dispatch(unsetLoading());
   }, [loading, dispatch]);
 
+const textColor=status==='pending'? 'text-red-500':'text-green-500'
+
   return (
     <Fragment>
       <Grid item md={3} xs={12}>
@@ -42,12 +44,12 @@ const ActionCard = ({ status }) => {
             <ListItem>
               <Grid container>
                 <Grid item xs={6}>
-                  <Typography className='text-gray-500 dark:text-gray-800 sm:text-md text-xl'>
-                    Status
+                  <Typography className='text-gray-500 dark:text-gray-800 sm:text-md text-sm'>
+                    Status:
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography className='text-gray-500 dark:text-gray-800  sm:text-md text-xl uppercase '>
+                  <Typography className={`${textColor} sm:text-md text-sm uppercase`} >
                     {status}
                   </Typography>
                 </Grid>

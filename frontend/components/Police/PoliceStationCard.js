@@ -17,10 +17,10 @@ const PoliceStationCard = ({
     const user=useSelector(state=>state.auth.user)
   return (
     <Fragment>
-      <div className='px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20 bg-gray-300 dark:bg-gray-300'>
+      <div className='px-2 py-16 mx-auto w-full md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20 bg-gray-300 dark:bg-gray-300'>
         <div className='grid gap-10 lg:grid-cols-2'>
           <div className='lg:pr-10'>
-            <h3 className='mb-2 text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-800'>
+            <h3 className='mb-2 lg:text-4xl md:text-3xl sm:text-2xl text-xl font-bold tracking-tight text-gray-900 dark:text-gray-800'>
               {' '}
               This complaint is under
               <p className='inline-block text-purple-400 ml-1'>{name}</p> now

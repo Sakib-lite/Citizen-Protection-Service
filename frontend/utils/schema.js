@@ -62,6 +62,8 @@ export const COMPLAINT_BY_ID = gql`
       }
       author {
         id
+        name
+        number
       }
     }
   }

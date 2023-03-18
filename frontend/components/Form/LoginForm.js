@@ -127,13 +127,13 @@ export default function LoginPage() {
           >
             Sign In
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href='/forget-password' passHref>
+          <Grid container className='gap-2'>
+            <Grid item md>
+            
                 <a className='text-blue-500 darK:text-blue-500 hover:text-blue-800'>
                   Forgot password?
                 </a>
-              </Link>
+
             </Grid>
             <Grid item>
               <Link href='/signup' passHref>

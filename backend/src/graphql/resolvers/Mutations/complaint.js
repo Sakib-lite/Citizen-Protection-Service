@@ -190,7 +190,7 @@ exports.complaintResolvers = {
       });
 
       if (!complaint) return Error('No Complaint found with this id');
-      console.log(status);
+     
       const complaintAuthor = await User.findById(complaint.author);
 
       if (status)
