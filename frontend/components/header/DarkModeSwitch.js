@@ -10,7 +10,7 @@ export default function DarkModeSwitch() {
 
     }, [theme]);
     const darkModeToggleHandler = () => {
-      setTheme(theme === 'dark' ? 'light' : 'dark');
+      setTheme(theme === 'light' ? 'dark' : 'light');
     };
     if(!mounted) return null;
   return (
