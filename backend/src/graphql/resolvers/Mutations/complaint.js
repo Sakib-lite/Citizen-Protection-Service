@@ -53,7 +53,7 @@ exports.complaintResolvers = {
 
       const { title, description, public } = input;
 
-      if (!title || !description || !public)
+      if (!title || !description)
         return Error('Please fill up all the fields');
       const img = [];
 
