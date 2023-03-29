@@ -5,6 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import TableCell from '@mui/material/TableCell';
 import { useMutation } from '@apollo/client';
 import { USER_UPDATE } from '../../../utils/schema';
+import Snackbar from '../../../utils/notistick/Snackbar';
 
 export default function UserHandler({ user }) {
     const [userUpdate, { data, error, loading }] = useMutation(USER_UPDATE );
@@ -19,7 +20,7 @@ if(user.role!=='user' || user.banned) return
           id: user.id,
         },
       });
-  
+  Snackbar.error(`${user.name} is banned now`)
 }
 
 const unbanHandler =()=>{
@@ -32,7 +33,7 @@ const unbanHandler =()=>{
           id: user.id,
         },
       });
-  
+      Snackbar.success(`${user.name} is unbanned`)
 }
 
 
@@ -43,12 +44,12 @@ const disableUnbanButton= user.banned ? '':'cursor-not-allowed opacity-50 '
     <Fragment>
       <TableCell align='center'>
         <IconButton className={disableBanButton} onClick={banHandler}>
-          <AddCircleOutlineIcon />
+         <AddCircleOutlineIcon />
         </IconButton>
       </TableCell>
       <TableCell align='center'>
         <IconButton className={disableUnbanButton} onClick={unbanHandler}>
-          <RemoveCircleOutlineIcon />
+       <RemoveCircleOutlineIcon />
         </IconButton>{' '}
       </TableCell>
     </Fragment>
