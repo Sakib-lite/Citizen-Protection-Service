@@ -43,7 +43,7 @@ export default function NavOptions() {
             </Button>
           </Link>
       
-       {role !== 'user' && (  <Link href='/police-stations/create-policestation' passHref>
+       {role === 'admin' && (  <Link href='/police-stations/create-policestation' passHref>
           <Button
             variant='outlined'
             className='text-gray-500 dark:text-gray-100 border-transparent hover:border-current'

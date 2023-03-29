@@ -39,7 +39,8 @@ const PoliceStationPage = () => {
   const [policeStation, setPoliceStation] = useState();
   const router = useRouter();
   const { slug } = router.query;
-
+  const auth = useSelector((state) => state.auth);
+  const { user } = auth;
 
 
 const complaintss=useSelector(state=>state.complaint.complaints).filter((comp)=>comp.policeStation.id===slug)
@@ -50,6 +51,10 @@ const complaintss=useSelector(state=>state.complaint.complaints).filter((comp)=>
       policeStationId: slug,
     },
   });
+
+  useEffect(()=>{
+if(user?.role==='moderator' && policeStation&& policeStation?.number!==user?.number)router.push('/')
+  },[policeStation])
 
   useEffect(() => {
     if (data) {
