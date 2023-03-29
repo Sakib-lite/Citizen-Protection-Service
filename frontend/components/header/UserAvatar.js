@@ -69,7 +69,7 @@ const image=user?.image ? user.image:'https://res.cloudinary.com/dlgajwgag/image
           </Link>
         </MenuItem>
         <MenuItem onClick={logoutHandler}>Logout</MenuItem>
-        <MenuItem>
+ {  user?.role!=='user' &&     <MenuItem>
           <Link
             style={{
               textDecoration: 'none',
@@ -80,7 +80,7 @@ const image=user?.image ? user.image:'https://res.cloudinary.com/dlgajwgag/image
           >
             Dashboard
           </Link>
-        </MenuItem>
+        </MenuItem>}
       </Menu>
     </Fragment>
   );
